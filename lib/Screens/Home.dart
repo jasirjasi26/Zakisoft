@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Future<void> initState() {
     _futureCategory = ApiService.getCategories();
-    _futureSubCategory = ApiService.getSubCategories();
+   // _futureSubCategory = ApiService.getSubCategories();
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   clickCategory(int index, int id) {
-    k.clear();
+   // k.clear();
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
@@ -88,8 +88,8 @@ class _HomePageState extends State<HomePage> {
         title: Text('Zakisoft',
             style: TextStyle(
                 color: Colors.blueGrey,
-                fontSize: 26,
-                fontWeight: FontWeight.bold)),
+                fontSize: 30,
+                fontWeight: FontWeight.w700)),
         leading: Icon(
           Icons.view_headline_rounded,
           size: 28,
@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          Container(
+          selectCategory.selectedSubCategory !=0 ?  Container(
             height: 40,
             child: Row(
               children: [
@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-          ),
+          ) : Container(),
           Divider(
             height: 8,
           ),
