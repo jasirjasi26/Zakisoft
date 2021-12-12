@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var scrollController = ScrollController();
-  Future<dynamic> _futureAllData;
   Future<dynamic> _futureCategory;
   Future<dynamic> _futureSubCategory;
 
@@ -22,41 +21,45 @@ class _HomePageState extends State<HomePage> {
   int selectedSubCategoryIndex;
   int favorite;
   static int offset = 0;
+  List k = [];
+  bool isLoading = false;
 
   @override
-  void initState() {
+  Future<void> initState() {
     _futureCategory = ApiService.getCategories();
     _futureSubCategory = ApiService.getSubCategories();
-    _futureAllData =
-        ApiService.getAll(selectCategory.selectedSubCategory, offset);
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels == 0) {
-          setState(() {
-            offset = offset - 1;
-            _futureAllData = ApiService.getAll(
-                selectCategory.selectedSubCategory,
-                offset);
-          });
           print('ListView scroll at top');
         } else {
           print('ListView scroll at bottom');
           setState(() {
             offset = offset + 1;
-            _futureAllData = ApiService.getAll(
-                selectCategory.selectedSubCategory,
-                offset);
           });
+          getList();
           // Load next documents
         }
       }
     });
+    getList();
 
     super.initState();
   }
 
+  getList() async {
+    isLoading = true;
+    ApiService.getAll(selectCategory.selectedSubCategory, offset).then((value) {
+      setState(() {
+        k.addAll(value);
+        isLoading = false;
+      });
+    });
+  }
+
   clickCategory(int index, int id) {
+    k.clear();
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
@@ -68,13 +71,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   clickSubCategory(int index, int id) {
+    k.clear();
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
       selectedSubCategoryIndex = index;
-      _futureAllData =
-          ApiService.getAll(selectCategory.selectedSubCategory, offset);
     });
+    getList();
   }
 
   @override
@@ -106,7 +109,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.only(bottom: 15, left: 5, right: 5),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
           Divider(
             height: 5,
@@ -256,84 +260,55 @@ class _HomePageState extends State<HomePage> {
           Divider(
             height: 8,
           ),
-          Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.78,
-              width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                future: _futureAllData,
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.data != null) {
-                    return LazyLoadScrollView(
-                        onEndOfPage: () {
-                        },
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) {
-                            return Divider(
-                              height: 8,
-                            );
-                          },
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              focusColor: Colors.white12,
-                              hoverColor: Colors.white12,
-                              selectedTileColor: Colors.blue,
-                              tileColor: Colors.white12,
-                              title: Text(data[index]['name'],
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                              leading: Container(
-                                width: 50,
-                                height: 50,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: CachedNetworkImage(
-                                    height: 60,
-                                    width: 60,
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGc5JIvQx5mAqDksfVyYeFtBLoJh4KN8ZDTfhHLEZljnAoOljWGCeYvvKI3rs8ODe_z0I&usqp=CAU",
-                                    placeholder: (context, url) =>
-                                        new CircularProgressIndicator(),
-                                  ),
-                                ),
+          k.length > 0
+              ? Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  child: ListView.builder(
+                      itemCount: k.length,
+                      controller: scrollController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          focusColor: Colors.white12,
+                          hoverColor: Colors.white12,
+                          selectedTileColor: Colors.blue,
+                          tileColor: Colors.white12,
+                          title: Text(k[index]['name'],
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          leading: Container(
+                            width: 50,
+                            height: 50,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.cover,
+                                imageUrl:
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGc5JIvQx5mAqDksfVyYeFtBLoJh4KN8ZDTfhHLEZljnAoOljWGCeYvvKI3rs8ODe_z0I&usqp=CAU",
+                                placeholder: (context, url) =>
+                                    new CircularProgressIndicator(),
                               ),
-                              subtitle: Text(
-                                "${data[index]['price']['sale_price']}" +
-                                    " SAR",
-                                style: TextStyle(
-                                    color: Colors.green[300],
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            );
-                          },
-                          physics: AlwaysScrollableScrollPhysics(),
-                          controller: scrollController,
-                          itemCount: data.length,
-                        ));
-                  } else {
-                    if (snapshot.data != null) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                            // child: Text("No data..."),
                             ),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-          ),
+                          ),
+                          subtitle: Text(
+                            "${k[index]['price']['sale_price']}" + " SAR",
+                            style: TextStyle(
+                                color: Colors.green[300],
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }))
+              : SizedBox(),
+          if (isLoading)
+            Center(
+                child: Container(
+                    height: 35, width: 35, child: CircularProgressIndicator()))
         ],
       ),
     );
