@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   int selectedCategoryIndex;
   static int filter = 136;
   int selectedSubCategoryIndex;
-  int favorite;
   static int offset = 0;
   List k = [];
   bool isLoading = false;
@@ -202,14 +201,12 @@ class _HomePageState extends State<HomePage> {
                   width: 5,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.96,
+                  width: MediaQuery.of(context).size.width,
                   child: FutureBuilder(
                     future: _futureSubCategory,
                     builder: (context, snapshot) {
                       final data = snapshot.data;
                       if (snapshot.connectionState == ConnectionState.done) {
-                        //selectCategory.selectedSubCategory = data[0]['id'];
-
                         return ListView.separated(
                           scrollDirection: Axis.horizontal,
                           separatorBuilder: (context, index) {
@@ -263,17 +260,19 @@ class _HomePageState extends State<HomePage> {
           k.length > 0
               ? Container(
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: ListView.builder(
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: 5,
+                          color: Colors.blueGrey,
+                        );
+                      },
                       itemCount: k.length,
                       controller: scrollController,
                       physics: AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          focusColor: Colors.white12,
-                          hoverColor: Colors.white12,
-                          selectedTileColor: Colors.blue,
-                          tileColor: Colors.white12,
                           title: Text(k[index]['name'],
                               style: TextStyle(
                                   fontSize: 18,
