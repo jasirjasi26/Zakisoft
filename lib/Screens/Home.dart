@@ -4,7 +4,6 @@ import 'package:flutter_rest_api/Services/Api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -115,7 +114,7 @@ class _HomePageState extends State<HomePage> {
             height: 5,
           ),
           Container(
-            height: 40,
+            height: 50,
             child: FutureBuilder(
               future: _futureCategory,
               builder: (context, snapshot) {
@@ -141,15 +140,17 @@ class _HomePageState extends State<HomePage> {
                                       ? Colors.blue[800]
                                       : Colors.blueGrey[400],
                                   borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(12),
                               margin: EdgeInsets.all(2),
-                              height: 35,
+                              height: 40,
                               child: Row(
                                 children: [
                                   Text(data[index]['name'],
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
+                                          fontWeight: selectedCategoryIndex == index
+                                              ? FontWeight.bold : FontWeight.normal
+                                      )),
                                 ],
                               )),
                         ),
@@ -232,10 +233,12 @@ class _HomePageState extends State<HomePage> {
                                     height: 35,
                                     child: Row(
                                       children: [
-                                        Text(data[index]['name'],
+                                        Text(data[index]['name'].toString().toUpperCase(),
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontWeight: FontWeight.bold)),
+                                                fontWeight: selectedSubCategoryIndex == index
+                                                    ? FontWeight.bold : FontWeight.normal
+                                            )),
                                       ],
                                     )),
                               ),
@@ -260,7 +263,8 @@ class _HomePageState extends State<HomePage> {
           k.length > 0
               ? Container(
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: ListView.separated(
+                  child: k.length > 0
+                      ? ListView.separated(
                       separatorBuilder: (context, index) {
                         return Divider(
                           height: 5,
@@ -302,12 +306,17 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold),
                           ),
                         );
-                      }))
+                      }) : Text("No data"))
               : SizedBox(),
           if (isLoading)
             Center(
-                child: Container(
-                    height: 35, width: 35, child: CircularProgressIndicator()))
+                child: SizedBox(
+                 // height: MediaQuery.of(context).size.height-150,
+                  child: Center(
+                    child: Container(
+                        height: 35, width: 35, child: CircularProgressIndicator()),
+                  ),
+                ))
         ],
       ),
     );
