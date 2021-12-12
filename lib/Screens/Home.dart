@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   Future<dynamic> _futureSubCategory;
 
   int selectedCategoryIndex;
-  static int filter = 136;
   int selectedSubCategoryIndex;
   static int offset = 0;
   List k = [];
@@ -25,7 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Future<void> initState() {
     _futureCategory = ApiService.getCategories();
-    // _futureSubCategory = ApiService.getSubCategories();
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
@@ -57,11 +55,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   clickCategory(int index, int id) {
-    // k.clear();
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
-      filter = id;
       _futureSubCategory = ApiService.getSubCategories();
       selectedCategoryIndex = index;
       selectedSubCategoryIndex = null;
