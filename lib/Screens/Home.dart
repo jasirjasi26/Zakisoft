@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                                               color: Colors.white,
                                               fontWeight:
                                                   selectedCategoryIndex == index
-                                                      ? FontWeight.bold
+                                                      ? FontWeight.w900
                                                       : FontWeight.normal)),
                                     ],
                                   )),
@@ -173,35 +173,6 @@ class _HomePageState extends State<HomePage> {
                       height: 40,
                       child: Row(
                         children: [
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     if (selectedSubCategoryIndex != null) {
-                          //       setState(() {
-                          //         selectedSubCategoryIndex = null;
-                          //       });
-                          //     }
-                          //     selectCategory.selectedSubCategory = 0;
-                          //   },
-                          //   child: Center(
-                          //     child: Container(
-                          //       decoration: BoxDecoration(
-                          //           color: selectedSubCategoryIndex == null ||
-                          //                   selectedSubCategoryIndex == -1
-                          //               ? Colors.blue[800]
-                          //               : Colors.blueGrey[400],
-                          //           borderRadius: BorderRadius.circular(5)),
-                          //       padding: EdgeInsets.all(10),
-                          //       margin: EdgeInsets.all(2),
-                          //       height: 35,
-                          //       width: 60,
-                          //       child: Center(
-                          //           child: Text("All",
-                          //               style: TextStyle(
-                          //                   color: Colors.white,
-                          //                   fontWeight: FontWeight.bold))),
-                          //     ),
-                          //   ),
-                          // ),
                           SizedBox(
                             width: 5,
                           ),
@@ -250,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                                                           fontWeight:
                                                               selectedSubCategoryIndex ==
                                                                       index
-                                                                  ? FontWeight.bold
+                                                                  ? FontWeight.w900
                                                                   : FontWeight
                                                                       .normal)),
                                                 ],
@@ -329,7 +300,7 @@ class _HomePageState extends State<HomePage> {
 
 
          isLoading ? Positioned(
-            bottom: 20,
+            bottom: 10,
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: Center(
