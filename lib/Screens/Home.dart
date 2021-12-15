@@ -215,29 +215,20 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Container(
                               decoration: BoxDecoration(
-                                  border: Border.fromBorderSide(
-                                      BorderSide(
-                                          color:
-                                          Colors.blueGrey,
-                                          width: 1)),
+                                  border: Border.fromBorderSide(BorderSide(
+                                      color: Colors.blueGrey, width: 1)),
                                   color: Colors.white,
-                                  borderRadius:
-                                  BorderRadius.circular(5)),
+                                  borderRadius: BorderRadius.circular(5)),
                               padding: EdgeInsets.only(
-                                  top: 8,
-                                  bottom: 8,
-                                  left: 20,
-                                  right: 20),
+                                  top: 8, bottom: 8, left: 20, right: 20),
                               margin: EdgeInsets.all(2),
                               height: 45,
                               child: Row(
                                 children: [
                                   Text("All",
                                       style: TextStyle(
-                                          color: Colors
-                                              .black,
-                                          fontWeight: FontWeight
-                                              .bold)),
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               )),
                           Container(
@@ -337,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                               separatorBuilder: (context, index) {
                                 return Divider(
                                   height: 1,
-                                  color: Colors.blueGrey,
+                                  //color: Colors.blueGrey,
                                 );
                               },
                               itemCount: k.length,
@@ -345,20 +336,24 @@ class _HomePageState extends State<HomePage> {
                               physics: AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
+                                String image_url = k[index]['images'][0]
+                                        ['image_url'];
+
                                 return Container(
-                                  padding: EdgeInsets.only(left: 5,bottom: 5,top: 5),
+                                  padding: EdgeInsets.only(
+                                      left: 5, bottom: 5, top: 5),
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: MediaQuery.of(context).size.width* 0.28,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.28,
                                         height: 80,
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
                                           child: CachedNetworkImage(
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGc5JIvQx5mAqDksfVyYeFtBLoJh4KN8ZDTfhHLEZljnAoOljWGCeYvvKI3rs8ODe_z0I&usqp=CAU",
+                                                "https://sta.farawlah.sa/storage/$image_url",
                                             placeholder: (context, url) =>
                                                 new CircularProgressIndicator(
                                               strokeWidth: 1.5,
@@ -367,25 +362,34 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                       Container(
-                                        padding: EdgeInsets.only(left: 5,bottom: 5),
-                                        width: MediaQuery.of(context).size.width* 0.6,
+                                        padding:
+                                            EdgeInsets.only(left: 5, bottom: 5),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(k[index]['name'],
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             SizedBox(
                                               height: 10,
                                             ),
-                                            Text("${k[index]['price']['sale_price']}" + " SAR",
+                                            Text(
+                                                "${k[index]['price']['sale_price']}" +
+                                                    " SAR",
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.green[800],
-                                                    fontWeight: FontWeight.w900)),
+                                                    fontWeight:
+                                                        FontWeight.w900)),
                                             SizedBox(
                                               height: 10,
                                             ),
@@ -394,7 +398,9 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Spacer(),
                                       Container(
-                                        width: MediaQuery.of(context).size.width* 0.1,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
                                         child: Column(
                                           children: [
                                             SizedBox(
