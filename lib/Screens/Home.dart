@@ -348,16 +348,18 @@ class _HomePageState extends State<HomePage> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.28,
-                                        height: 80,
-                                        child: ClipRRect(
+                                        height: 90,
+                                        child: image_url != "" ?ClipRRect(
                                           child: CachedNetworkImage(
                                             fit: BoxFit.cover,
                                             imageUrl:
                                                 "https://sta.farawlah.sa/storage/$image_url",
-                                            placeholder: (context, url) =>
-                                                new CircularProgressIndicator(
-                                              strokeWidth: 1.5,
-                                            ),
+                                          ),
+                                        ) : Container(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 1.5,
                                           ),
                                         ),
                                       ),
