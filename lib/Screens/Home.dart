@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                           ? ListView.separated(
                               separatorBuilder: (context, index) {
                                 return Divider(
-                                  height: 5,
+                                  height: 1,
                                   color: Colors.blueGrey,
                                 );
                               },
@@ -346,11 +346,11 @@ class _HomePageState extends State<HomePage> {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return Container(
-                                  padding: EdgeInsets.only(left: 5),
+                                  padding: EdgeInsets.only(left: 5,bottom: 5,top: 5),
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: 120,
+                                        width: MediaQuery.of(context).size.width* 0.28,
                                         height: 80,
                                         child: ClipRRect(
                                           borderRadius:
@@ -366,56 +366,62 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(k[index]['name'],
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold)),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          // Text(k[index]['name'],
-                                          //     style: TextStyle(
-                                          //         fontSize: 18,
-                                          //         color: Colors.black,
-                                          //         fontWeight: FontWeight.bold)),
-                                          // SizedBox(
-                                          //   height: 8,
-                                          // ),
-                                          Text("${k[index]['price']['sale_price']}" + " SAR",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.green[800],
-                                                  fontWeight: FontWeight.w900)),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                        ],
+                                      Container(
+                                        padding: EdgeInsets.only(left: 5,bottom: 5),
+                                        width: MediaQuery.of(context).size.width* 0.6,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(k[index]['name'],
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold)),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text("${k[index]['price']['sale_price']}" + " SAR",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.green[800],
+                                                    fontWeight: FontWeight.w900)),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Spacer(),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.favorite_border,
-                                            size: 25,
-                                            color: Colors.red[900],
-                                          ),
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 10,
+                                      Container(
+                                        width: MediaQuery.of(context).size.width* 0.1,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Icon(
+                                              Icons.favorite_border,
+                                              size: 20,
+                                              color: Colors.red[900],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add_circle,
+                                                  size: 27,
+                                                  color: Colors.green[700],
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
