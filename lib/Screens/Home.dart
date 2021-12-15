@@ -52,9 +52,11 @@ class _HomePageState extends State<HomePage> {
         isLoading = false;
       });
     });
+    print(selectCategory.selectedSubCategory);
   }
 
   clickCategory(int index, int id) {
+    k.clear();
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
@@ -78,24 +80,31 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 70,
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text('Zakisoft',
-            style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: 30,
-                fontWeight: FontWeight.w700)),
+        title: Container(
+          height: 120,
+          width: 150,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage("asset/strawberry.png"),
+            ),
+          ),
+        ),
         leading: Icon(
           Icons.view_headline_rounded,
-          size: 28,
-          color: Colors.grey,
+          size: 35,
+          color: Colors.red[900],
         ),
         actions: [
           Icon(
             Icons.search,
-            size: 28,
-            color: Colors.grey,
+            size: 35,
+            color: Colors.red[900],
           ),
           SizedBox(
             width: 15,
@@ -109,71 +118,130 @@ class _HomePageState extends State<HomePage> {
             physics: NeverScrollableScrollPhysics(),
             children: [
               Divider(
-                height: 5,
+                height: 1,
               ),
-              Container(
-                height: 50,
-                child: FutureBuilder(
-                  future: _futureCategory,
-                  builder: (context, snapshot) {
-                    final data = snapshot.data;
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 20,
-                            width: 3,
-                          );
-                        },
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              clickCategory(index, data[index]['id']);
+              Row(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 45,
+                    child: Icon(
+                      Icons.now_widgets_outlined,
+                      color: Colors.red[900],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width - 45,
+                    height: 45,
+                    child: FutureBuilder(
+                      future: _futureCategory,
+                      builder: (context, snapshot) {
+                        final data = snapshot.data;
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 20,
+                                width: 2,
+                              );
                             },
-                            child: Center(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      color: selectedCategoryIndex == index
-                                          ? Colors.blue[800]
-                                          : Colors.blueGrey[400],
-                                      borderRadius: BorderRadius.circular(5)),
-                                  padding: EdgeInsets.all(12),
-                                  margin: EdgeInsets.all(2),
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      Text(data[index]['name'],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight:
-                                                  selectedCategoryIndex == index
-                                                      ? FontWeight.w900
-                                                      : FontWeight.normal)),
-                                    ],
-                                  )),
-                            ),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  clickCategory(index, data[index]['id']);
+                                },
+                                child: Center(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.fromBorderSide(
+                                              BorderSide(
+                                                  color: Colors.blueGrey,
+                                                  width: 1)),
+                                          color: selectedCategoryIndex == index
+                                              ? Colors.green[800]
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      padding: EdgeInsets.only(
+                                          top: 8,
+                                          bottom: 8,
+                                          left: 20,
+                                          right: 20),
+                                      margin: EdgeInsets.all(2),
+                                      height: 40,
+                                      child: Row(
+                                        children: [
+                                          Text(data[index]['name'].toString(),
+                                              style: TextStyle(
+                                                  color:
+                                                      selectedCategoryIndex ==
+                                                              index
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontWeight:
+                                                      selectedCategoryIndex ==
+                                                              index
+                                                          ? FontWeight.w900
+                                                          : FontWeight.bold)),
+                                        ],
+                                      )),
+                                ),
+                              );
+                            },
+                            itemCount: data.length,
                           );
-                        },
-                        itemCount: data.length,
-                      );
-                    }
-                    return Center(
-                        // child: Container(width: 80, child: LinearProgressIndicator()),
-                        );
-                  },
-                ),
+                        }
+                        return Center(
+                            // child: Container(width: 80, child: LinearProgressIndicator()),
+                            );
+                      },
+                    ),
+                  ),
+                ],
               ),
               selectCategory.selectedSubCategory != 0
                   ? Container(
                       height: 40,
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: 5,
+                          Container(
+                            height: 55,
+                            width: 45,
+                            child: Icon(
+                              Icons.filter_alt_rounded,
+                              color: Colors.red[900],
+                            ),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  border: Border.fromBorderSide(
+                                      BorderSide(
+                                          color:
+                                          Colors.blueGrey,
+                                          width: 1)),
+                                  color: Colors.white,
+                                  borderRadius:
+                                  BorderRadius.circular(5)),
+                              padding: EdgeInsets.only(
+                                  top: 8,
+                                  bottom: 8,
+                                  left: 20,
+                                  right: 20),
+                              margin: EdgeInsets.all(2),
+                              height: 45,
+                              child: Row(
+                                children: [
+                                  Text("All",
+                                      style: TextStyle(
+                                          color: Colors
+                                              .black,
+                                          fontWeight: FontWeight
+                                              .bold)),
+                                ],
+                              )),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 105,
                             child: FutureBuilder(
                               future: _futureSubCategory,
                               builder: (context, snapshot) {
@@ -185,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                                     separatorBuilder: (context, index) {
                                       return SizedBox(
                                         height: 20,
-                                        width: 3,
+                                        width: 2,
                                       );
                                     },
                                     itemBuilder: (context, index) {
@@ -197,15 +265,25 @@ class _HomePageState extends State<HomePage> {
                                         child: Center(
                                           child: Container(
                                               decoration: BoxDecoration(
-                                                  color: selectedSubCategoryIndex ==
-                                                          index
-                                                      ? Colors.blue[800]
-                                                      : Colors.blueGrey[400],
+                                                  border: Border.fromBorderSide(
+                                                      BorderSide(
+                                                          color:
+                                                              Colors.blueGrey,
+                                                          width: 1)),
+                                                  color:
+                                                      selectedSubCategoryIndex ==
+                                                              index
+                                                          ? Colors.green[800]
+                                                          : Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
-                                              padding: EdgeInsets.all(10),
+                                              padding: EdgeInsets.only(
+                                                  top: 8,
+                                                  bottom: 8,
+                                                  left: 20,
+                                                  right: 20),
                                               margin: EdgeInsets.all(2),
-                                              height: 35,
+                                              height: 45,
                                               child: Row(
                                                 children: [
                                                   Text(
@@ -213,13 +291,19 @@ class _HomePageState extends State<HomePage> {
                                                           .toString()
                                                           .toUpperCase(),
                                                       style: TextStyle(
-                                                          color: Colors.white,
+                                                          color:
+                                                              selectedSubCategoryIndex ==
+                                                                      index
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
                                                           fontWeight:
                                                               selectedSubCategoryIndex ==
                                                                       index
-                                                                  ? FontWeight.w900
+                                                                  ? FontWeight
+                                                                      .w900
                                                                   : FontWeight
-                                                                      .normal)),
+                                                                      .bold)),
                                                 ],
                                               )),
                                         ),
@@ -230,7 +314,10 @@ class _HomePageState extends State<HomePage> {
                                 }
                                 return Center(
                                   child: Container(
-                                      width: 80, child: LinearProgressIndicator(minHeight: 1.5,)),
+                                      width: 80,
+                                      child: LinearProgressIndicator(
+                                        minHeight: 1.5,
+                                      )),
                                 );
                               },
                             ),
@@ -240,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                     )
                   : Container(),
               Divider(
-                height: 8,
+                height: 5,
               ),
               k.length > 0
                   ? Container(
@@ -258,34 +345,79 @@ class _HomePageState extends State<HomePage> {
                               physics: AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(k[index]['name'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold)),
-                                  leading: Container(
-                                    width: 50,
-                                    height: 50,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: CachedNetworkImage(
-                                        height: 60,
-                                        width: 60,
-                                        fit: BoxFit.cover,
-                                        imageUrl:
-                                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGc5JIvQx5mAqDksfVyYeFtBLoJh4KN8ZDTfhHLEZljnAoOljWGCeYvvKI3rs8ODe_z0I&usqp=CAU",
-                                        placeholder: (context, url) =>
-                                            new CircularProgressIndicator(strokeWidth: 1.5,),
+                                return Container(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 120,
+                                        height: 80,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.cover,
+                                            imageUrl:
+                                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGc5JIvQx5mAqDksfVyYeFtBLoJh4KN8ZDTfhHLEZljnAoOljWGCeYvvKI3rs8ODe_z0I&usqp=CAU",
+                                            placeholder: (context, url) =>
+                                                new CircularProgressIndicator(
+                                              strokeWidth: 1.5,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    "${k[index]['price']['sale_price']}" + " SAR",
-                                    style: TextStyle(
-                                        color: Colors.green[300],
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(k[index]['name'],
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          // Text(k[index]['name'],
+                                          //     style: TextStyle(
+                                          //         fontSize: 18,
+                                          //         color: Colors.black,
+                                          //         fontWeight: FontWeight.bold)),
+                                          // SizedBox(
+                                          //   height: 8,
+                                          // ),
+                                          Text("${k[index]['price']['sale_price']}" + " SAR",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.green[800],
+                                                  fontWeight: FontWeight.w900)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.favorite_border,
+                                            size: 25,
+                                            color: Colors.red[900],
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                    ],
                                   ),
                                 );
                               })
@@ -293,18 +425,22 @@ class _HomePageState extends State<HomePage> {
                   : SizedBox(),
             ],
           ),
-
-
-         isLoading ? Positioned(
-            bottom: 10,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Container(
-                     height:30,width: 30, child: CircularProgressIndicator(strokeWidth: 1.5,)),
-              ),
-            ),
-          ) : SizedBox()
+          isLoading
+              ? Positioned(
+                  bottom: 10,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: Container(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                          )),
+                    ),
+                  ),
+                )
+              : SizedBox()
         ],
       ),
     );
