@@ -402,8 +402,8 @@ class _HomePageState extends State<HomePage> {
                                                   "${k[index]['price']['sale_price']}" +
                                                       " SAR",
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.green[800],
+                                                      fontSize: 18,
+                                                      color: Colors.green[600],
                                                       fontWeight:
                                                           FontWeight.w900)),
                                               SizedBox(
@@ -435,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                                                   Icon(
                                                     Icons.add_circle,
                                                     size: 27,
-                                                    color: Colors.green[700],
+                                                    color: Colors.green[600],
                                                   ),
                                                   SizedBox(
                                                     width: 10,
