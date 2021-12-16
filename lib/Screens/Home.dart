@@ -1,8 +1,9 @@
 // @dart=2.9
+import 'package:flutter_rest_api/Controllers/AllDataController.dart';
 import 'package:flutter_rest_api/Controllers/CategoryController.dart';
 import 'package:flutter_rest_api/Controllers/SubCategoryController.dart';
+import 'package:flutter_rest_api/Model/AllData.dart';
 import 'package:flutter_rest_api/Model/selectCategory.dart';
-import 'package:flutter_rest_api/Services/Api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,29 +20,29 @@ class _HomePageState extends State<HomePage> {
   final CategoryController categoryController = Get.put(CategoryController());
   final SubCategoryController subCategoryController =
       Get.put(SubCategoryController());
+  final AllDataController allDataController = Get.put(AllDataController());
 
   var scrollController = ScrollController();
 
   int selectedCategoryIndex;
   int selectedSubCategoryIndex;
   static int offset = 0;
-  List k = [];
+  List<AllData> k = [];
   bool isLoading = false;
 
   @override
   Future<void> initState() {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
-        if (scrollController.position.pixels == 0) {
-          print('ListView scroll at top');
-        } else {
+        if (scrollController.position.pixels != 0) {
           setState(() {
             offset = offset + 1;
           });
-
           selectCategory.offset = offset;
           getList();
 
+        } else {
+          print('ListView scroll at top');
           // Load next documents
         }
       }
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   getList() async {
     isLoading = true;
-    ApiService.getAll().then((value) {
+    allDataController.fetchAllData().then((value) {
       setState(() {
         k.addAll(value);
         isLoading = false;
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       selectedSubCategoryIndex = null;
     });
     subCategoryController.fetchSubCategory();
-    getList();
+
   }
 
   clickSubCategory(int index, int id) {
@@ -215,8 +216,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Card(
-                            color:
-                            selectedSubCategoryIndex == null
+                            color: selectedSubCategoryIndex == null
                                 ? Colors.green[800]
                                 : Colors.white,
                             child: GestureDetector(
@@ -234,9 +234,9 @@ class _HomePageState extends State<HomePage> {
                                   child: Text("All",
                                       style: TextStyle(
                                           color:
-                                          selectedSubCategoryIndex == null
-                                              ? Colors.white
-                                              : Colors.black,
+                                              selectedSubCategoryIndex == null
+                                                  ? Colors.white
+                                                  : Colors.black,
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ),
@@ -335,123 +335,111 @@ class _HomePageState extends State<HomePage> {
               Divider(
                 height: 5,
               ),
-              k.length > 0
-                  ? Container(
+               Container(
                       height: MediaQuery.of(context).size.height,
-                      child: k.length > 0
-                          ? ListView.builder(
-
-                              itemCount: k.length,
-                              controller: scrollController,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                String image_url =
-                                    k[index]['images'][0]['image_url'];
-
-                                return Card(
-                                  margin: EdgeInsets.only(bottom: 0.8),
-                                  color: Colors.white,
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.28,
-                                          height: 90,
-                                          child: image_url != ""
-                                              ? ClipRRect(
-                                                  child: CachedNetworkImage(
-                                                    fit: BoxFit.cover,
-                                                    imageUrl:
-                                                        "https://sta.farawlah.sa/storage/$image_url",
-                                                  ),
-                                                )
-                                              : Container(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 1.5,
-                                                  ),
-                                                ),
-                                        ),
-                                        Container(
-                                          padding:
-                                              EdgeInsets.only(left: 5, bottom: 5),
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.6,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(k[index]['name'],
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              SizedBox(
-                                                height: 10,
+                      child:  ListView.builder(
+                          itemCount: k.length,
+                          controller: scrollController,
+                          physics: AlwaysScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            String image_url =
+                                k[index].images[0].imageUrl.toString();
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 0.8),
+                              color: Colors.white,
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.28,
+                                      height: 90,
+                                      child: image_url != ""
+                                          ? ClipRRect(
+                                              child: CachedNetworkImage(
+                                                fit: BoxFit.cover,
+                                                imageUrl:
+                                                    "https://sta.farawlah.sa/storage/$image_url",
                                               ),
-                                              Text(
-                                                  "${k[index]['price']['sale_price']}" +
-                                                      " SAR",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.green[600],
-                                                      fontWeight:
-                                                          FontWeight.w900)),
-                                              SizedBox(
-                                                height: 10,
+                                            )
+                                          : Container(
+                                              height: 30,
+                                              width: 30,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 1.5,
                                               ),
-                                            ],
+                                            ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.only(left: 5, bottom: 5),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(k[index].name,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(
+                                            height: 10,
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.1,
-                                          child: Column(
+                                          Text(
+                                              "${k[index].price.salePrice}" +
+                                                  " SAR",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.green[600],
+                                                  fontWeight: FontWeight.w900)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.1,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Icon(
+                                            Icons.favorite_border,
+                                            size: 20,
+                                            color: Colors.red[900],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
                                             children: [
+                                              Icon(
+                                                Icons.add_circle,
+                                                size: 27,
+                                                color: Colors.green[600],
+                                              ),
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Icon(
-                                                Icons.favorite_border,
-                                                size: 20,
-                                                color: Colors.red[900],
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.add_circle,
-                                                    size: 27,
-                                                    color: Colors.green[600],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                ],
-                                              ),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              })
-                          : Text("No data"))
-                  : SizedBox(),
+                                  ],
+                                ),
+                              ),
+                            );
+                          })),
             ],
           ),
           isLoading
