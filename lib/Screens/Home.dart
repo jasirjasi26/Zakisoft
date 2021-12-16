@@ -1,9 +1,14 @@
 // @dart=2.9
+import 'package:flutter_rest_api/Controllers/CategoryController.dart';
+import 'package:flutter_rest_api/Controllers/SubCategoryController.dart';
 import 'package:flutter_rest_api/Model/selectCategory.dart';
 import 'package:flutter_rest_api/Services/Api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,9 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final CategoryController categoryController = Get.put(CategoryController());
+  final SubCategoryController subCategoryController =
+      Get.put(SubCategoryController());
+
   var scrollController = ScrollController();
-  Future<dynamic> _futureCategory;
-  Future<dynamic> _futureSubCategory;
 
   int selectedCategoryIndex;
   int selectedSubCategoryIndex;
@@ -23,8 +30,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Future<void> initState() {
-    _futureCategory = ApiService.getCategories();
-
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels == 0) {
@@ -60,10 +65,10 @@ class _HomePageState extends State<HomePage> {
     offset = 0;
     selectCategory.selectedSubCategory = id;
     setState(() {
-      _futureSubCategory = ApiService.getSubCategories();
       selectedCategoryIndex = index;
       selectedSubCategoryIndex = null;
     });
+    subCategoryController.fetchSubCategory();
   }
 
   clickSubCategory(int index, int id) {
@@ -130,15 +135,12 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.red[900],
                     ),
                   ),
+
+                  ///Getx Categories
                   Container(
-                    width: MediaQuery.of(context).size.width - 45,
-                    height: 45,
-                    child: FutureBuilder(
-                      future: _futureCategory,
-                      builder: (context, snapshot) {
-                        final data = snapshot.data;
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return ListView.separated(
+                      width: MediaQuery.of(context).size.width - 45,
+                      height: 45,
+                      child: Obx(() => ListView.separated(
                             scrollDirection: Axis.horizontal,
                             separatorBuilder: (context, index) {
                               return SizedBox(
@@ -149,7 +151,10 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
-                                  clickCategory(index, data[index]['id']);
+                                  clickCategory(
+                                      index,
+                                      categoryController
+                                          .categoryList[index].id);
                                 },
                                 child: Center(
                                   child: Container(
@@ -172,7 +177,10 @@ class _HomePageState extends State<HomePage> {
                                       height: 40,
                                       child: Row(
                                         children: [
-                                          Text(data[index]['name'].toString(),
+                                          Text(
+                                              categoryController
+                                                  .categoryList[index].name
+                                                  .toString(),
                                               style: TextStyle(
                                                   color:
                                                       selectedCategoryIndex ==
@@ -189,15 +197,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               );
                             },
-                            itemCount: data.length,
-                          );
-                        }
-                        return Center(
-                            // child: Container(width: 80, child: LinearProgressIndicator()),
-                            );
-                      },
-                    ),
-                  ),
+                            itemCount: categoryController.categoryList.length,
+                          ))),
                 ],
               ),
               selectCategory.selectedSubCategory != 0
@@ -231,15 +232,12 @@ class _HomePageState extends State<HomePage> {
                                           fontWeight: FontWeight.bold)),
                                 ],
                               )),
+
+                          ///Getx SubCategories
                           Container(
-                            width: MediaQuery.of(context).size.width - 105,
-                            child: FutureBuilder(
-                              future: _futureSubCategory,
-                              builder: (context, snapshot) {
-                                final data = snapshot.data;
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  return ListView.separated(
+                              width: MediaQuery.of(context).size.width - 110,
+                              height: 45,
+                              child: Obx(() => ListView.separated(
                                     scrollDirection: Axis.horizontal,
                                     separatorBuilder: (context, index) {
                                       return SizedBox(
@@ -251,7 +249,9 @@ class _HomePageState extends State<HomePage> {
                                       return GestureDetector(
                                         onTap: () {
                                           clickSubCategory(
-                                              index, data[index]['id']);
+                                              index,
+                                              subCategoryController
+                                                  .subCategoryList[index].id);
                                         },
                                         child: Center(
                                           child: Container(
@@ -274,45 +274,122 @@ class _HomePageState extends State<HomePage> {
                                                   left: 20,
                                                   right: 20),
                                               margin: EdgeInsets.all(2),
-                                              height: 45,
+                                              height: 40,
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                      data[index]['name']
-                                                          .toString()
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              selectedSubCategoryIndex ==
-                                                                      index
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                          fontWeight:
-                                                              selectedSubCategoryIndex ==
-                                                                      index
-                                                                  ? FontWeight
-                                                                      .w900
-                                                                  : FontWeight
-                                                                      .bold)),
+                                                      subCategoryController
+                                                          .subCategoryList[
+                                                              index]
+                                                          .name
+                                                          .toString().toUpperCase(),
+                                                      style:
+                                                          TextStyle(
+                                                              color:
+                                                                  selectedSubCategoryIndex ==
+                                                                          index
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                              fontWeight:
+                                                                  selectedSubCategoryIndex ==
+                                                                          index
+                                                                      ? FontWeight
+                                                                          .w900
+                                                                      : FontWeight
+                                                                          .bold)),
                                                 ],
                                               )),
                                         ),
                                       );
                                     },
-                                    itemCount: data.length,
-                                  );
-                                }
-                                return Center(
-                                  child: Container(
-                                      width: 80,
-                                      child: LinearProgressIndicator(
-                                        minHeight: 1.5,
-                                      )),
-                                );
-                              },
-                            ),
-                          ),
+                                    itemCount: subCategoryController
+                                        .subCategoryList.length,
+                                  ))),
+
+                          // Container(
+                          //   width: MediaQuery.of(context).size.width - 105,
+                          //   child: FutureBuilder(
+                          //     future: _futureSubCategory,
+                          //     builder: (context, snapshot) {
+                          //       final data = snapshot.data;
+                          //       if (snapshot.connectionState ==
+                          //           ConnectionState.done) {
+                          //         return ListView.separated(
+                          //           scrollDirection: Axis.horizontal,
+                          //           separatorBuilder: (context, index) {
+                          //             return SizedBox(
+                          //               height: 20,
+                          //               width: 2,
+                          //             );
+                          //           },
+                          //           itemBuilder: (context, index) {
+                          //             return GestureDetector(
+                          //               onTap: () {
+                          //                 clickSubCategory(
+                          //                     index, data[index]['id']);
+                          //               },
+                          //               child: Center(
+                          //                 child: Container(
+                          //                     decoration: BoxDecoration(
+                          //                         border: Border.fromBorderSide(
+                          //                             BorderSide(
+                          //                                 color:
+                          //                                     Colors.blueGrey,
+                          //                                 width: 1)),
+                          //                         color:
+                          //                             selectedSubCategoryIndex ==
+                          //                                     index
+                          //                                 ? Colors.green[800]
+                          //                                 : Colors.white,
+                          //                         borderRadius:
+                          //                             BorderRadius.circular(5)),
+                          //                     padding: EdgeInsets.only(
+                          //                         top: 8,
+                          //                         bottom: 8,
+                          //                         left: 20,
+                          //                         right: 20),
+                          //                     margin: EdgeInsets.all(2),
+                          //                     height: 45,
+                          //                     child: Row(
+                          //                       children: [
+                          //                         Text(
+                          //                             data[index]['name']
+                          //                                 .toString()
+                          //                                 .toUpperCase(),
+                          //                             style: TextStyle(
+                          //                                 color:
+                          //                                     selectedSubCategoryIndex ==
+                          //                                             index
+                          //                                         ? Colors.white
+                          //                                         : Colors
+                          //                                             .black,
+                          //                                 fontWeight:
+                          //                                     selectedSubCategoryIndex ==
+                          //                                             index
+                          //                                         ? FontWeight
+                          //                                             .w900
+                          //                                         : FontWeight
+                          //                                             .bold)),
+                          //                       ],
+                          //                     )),
+                          //               ),
+                          //             );
+                          //           },
+                          //           itemCount: data.length,
+                          //         );
+                          //       }
+                          //       return Center(
+                          //         child: Container(
+                          //             width: 80,
+                          //             child: LinearProgressIndicator(
+                          //               minHeight: 1.5,
+                          //             )),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     )
@@ -336,8 +413,8 @@ class _HomePageState extends State<HomePage> {
                               physics: AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
-                                String image_url = k[index]['images'][0]
-                                        ['image_url'];
+                                String image_url =
+                                    k[index]['images'][0]['image_url'];
 
                                 return Container(
                                   padding: EdgeInsets.only(
@@ -349,19 +426,22 @@ class _HomePageState extends State<HomePage> {
                                             MediaQuery.of(context).size.width *
                                                 0.28,
                                         height: 90,
-                                        child: image_url != "" ?ClipRRect(
-                                          child: CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            imageUrl:
-                                                "https://sta.farawlah.sa/storage/$image_url",
-                                          ),
-                                        ) : Container(
-                                          height: 30,
-                                          width: 30,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 1.5,
-                                          ),
-                                        ),
+                                        child: image_url != ""
+                                            ? ClipRRect(
+                                                child: CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  imageUrl:
+                                                      "https://sta.farawlah.sa/storage/$image_url",
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1.5,
+                                                ),
+                                              ),
                                       ),
                                       Container(
                                         padding:
