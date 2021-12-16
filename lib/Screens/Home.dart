@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     k.clear();
     offset = 0;
     selectCategory.offset = offset;
-    selectCategory.selectedSubCategory = 0;
+    selectCategory.selectedSubCategory = id;
     setState(() {
       selectedCategoryIndex = index;
       selectedSubCategoryIndex = null;
@@ -468,6 +468,7 @@ class _HomePageState extends State<HomePage> {
                           height: 30,
                           width: 30,
                           child: CircularProgressIndicator(
+                            color: Colors.red[900],
                             strokeWidth: 1.5,
                           )),
                     ),
