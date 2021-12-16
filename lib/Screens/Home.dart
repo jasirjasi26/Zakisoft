@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final CategoryController categoryController = Get.put(CategoryController());
   final SubCategoryController subCategoryController =
-  Get.put(SubCategoryController());
+      Get.put(SubCategoryController());
 
   var scrollController = ScrollController();
 
@@ -35,11 +35,11 @@ class _HomePageState extends State<HomePage> {
         if (scrollController.position.pixels == 0) {
           print('ListView scroll at top');
         } else {
-          print('ListView scroll at bottom');
+          getList();
           setState(() {
             offset = offset + 1;
           });
-          getList();
+
           // Load next documents
         }
       }
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
 
   getList() async {
     isLoading = true;
-    ApiService.getAll(selectCategory.selectedSubCategory, offset).then((value) {
+    ApiService.getAll().then((value) {
       setState(() {
         k.addAll(value);
         isLoading = false;
@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
       selectedSubCategoryIndex = null;
     });
     subCategoryController.fetchSubCategory();
+    getList();
   }
 
   clickSubCategory(int index, int id) {
@@ -138,13 +139,9 @@ class _HomePageState extends State<HomePage> {
 
                   ///Getx Categories
                   Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width - 45,
+                      width: MediaQuery.of(context).size.width - 45,
                       height: 45,
-                      child: Obx(() =>
-                          ListView.separated(
+                      child: Obx(() => ListView.separated(
                             scrollDirection: Axis.horizontal,
                             separatorBuilder: (context, index) {
                               return SizedBox(
@@ -160,44 +157,40 @@ class _HomePageState extends State<HomePage> {
                                       categoryController
                                           .categoryList[index].id);
                                 },
-                                child: Center(
-                                  child: Container(
+                                child: Card(
+                                  color: selectedCategoryIndex == index
+                                      ? Colors.green[800]
+                                      : Colors.white,
+                                  child: Center(
+                                    child: Container(
                                       decoration: BoxDecoration(
-                                          border: Border.fromBorderSide(
-                                              BorderSide(
-                                                  color: Colors.blueGrey,
-                                                  width: 1)),
-                                          color: selectedCategoryIndex == index
-                                              ? Colors.green[800]
-                                              : Colors.white,
                                           borderRadius:
-                                          BorderRadius.circular(5)),
+                                              BorderRadius.circular(5)),
                                       padding: EdgeInsets.only(
                                           top: 8,
                                           bottom: 8,
                                           left: 20,
                                           right: 20),
-                                      margin: EdgeInsets.all(2),
+                                      margin: EdgeInsets.only(right: 2),
                                       height: 40,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                              categoryController
-                                                  .categoryList[index].name
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  color:
-                                                  selectedCategoryIndex ==
-                                                      index
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  fontWeight:
-                                                  selectedCategoryIndex ==
-                                                      index
-                                                      ? FontWeight.w900
-                                                      : FontWeight.bold)),
-                                        ],
-                                      )),
+                                      child: Center(
+                                        child: Text(
+                                            categoryController
+                                                .categoryList[index].name
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: selectedCategoryIndex ==
+                                                        index
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight:
+                                                    selectedCategoryIndex ==
+                                                            index
+                                                        ? FontWeight.w900
+                                                        : FontWeight.bold)),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               );
                             },
@@ -207,293 +200,264 @@ class _HomePageState extends State<HomePage> {
               ),
               selectCategory.selectedSubCategory != 0
                   ? Container(
-                height: 40,
-                child: Row(
-                  children: [
-                  Container(
-                  height: 55,
-                  width: 45,
-                  child: Icon(
-                    Icons.filter_alt_rounded,
-                    color: Colors.red[900],
-                  ),
-                ),
-                Container(
-                    decoration: BoxDecoration(
-                        border: Border.fromBorderSide(BorderSide(
-                            color: Colors.blueGrey, width: 1)),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    padding: EdgeInsets.only(
-                        top: 8, bottom: 8, left: 20, right: 20),
-                    margin: EdgeInsets.all(2),
-                    height: 45,
-                    child: Row(
-                      children: [
-                        Text("All",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    )),
-
-                ///Getx SubCategories
-                Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width - 110,
-                  height: 45,
-                  child: Obx(() {
-                    if(subCategoryController.isLoading.value){
-                      return Row(
+                      height: 40,
+                      child: Row(
                         children: [
-                          Spacer(),
                           Container(
-                            width: 100,
-                            height: 1,
-                            child: Center(
-                              child: LinearProgressIndicator(
-                                minHeight: 1.5,
+                            height: 55,
+                            width: 45,
+                            child: Icon(
+                              Icons.filter_alt_rounded,
+                              color: Colors.red[900],
+                            ),
+                          ),
+                          Card(
+                            color: Colors.white,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5)),
+                              padding: EdgeInsets.only(
+                                  top: 8, bottom: 8, left: 20, right: 20),
+                              margin: EdgeInsets.only(right: 2),
+                              height: 45,
+                              child: Center(
+                                child: Text("All",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
                               ),
                             ),
                           ),
-                          Spacer(),
-                        ],
-                      );
-                    }
-                    else{
-                      return ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 20,
-                            width: 2,
-                          );
-                        },
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              clickSubCategory(
-                                  index,
-                                  subCategoryController
-                                      .subCategoryList[index].id);
-                            },
-                            child: Center(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.fromBorderSide(
-                                          BorderSide(
-                                              color:
-                                              Colors.blueGrey,
-                                              width: 1)),
-                                      color:
-                                      selectedSubCategoryIndex ==
-                                          index
-                                          ? Colors.green[800]
-                                          : Colors.white,
-                                      borderRadius:
-                                      BorderRadius.circular(5)),
-                                  padding: EdgeInsets.only(
-                                      top: 8,
-                                      bottom: 8,
-                                      left: 20,
-                                      right: 20),
-                                  margin: EdgeInsets.all(2),
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                          subCategoryController
-                                              .subCategoryList[
-                                          index]
-                                              .name
-                                              .toString().toUpperCase(),
-                                          style:
-                                          TextStyle(
-                                              color:
-                                              selectedSubCategoryIndex ==
-                                                  index
-                                                  ? Colors
-                                                  .white
-                                                  : Colors
-                                                  .black,
-                                              fontWeight:
-                                              selectedSubCategoryIndex ==
-                                                  index
-                                                  ? FontWeight
-                                                  .w900
-                                                  : FontWeight
-                                                  .bold)),
-                                    ],
-                                  )),
-                            ),
-                          );
 
-                      },
-                      itemCount: subCategoryController
-                          .subCategoryList.length,
-                    );
-                  }})),
-                  ],
-                ),
-              )
+                          ///Getx SubCategories
+                          Container(
+                              width: MediaQuery.of(context).size.width - 110,
+                              height: 45,
+                              child: Obx(() {
+                                if (subCategoryController.isLoading.value) {
+                                  return Row(
+                                    children: [
+                                      Spacer(),
+                                      Container(
+                                        width: 100,
+                                        height: 1,
+                                        child: Center(
+                                          child: LinearProgressIndicator(
+                                            minHeight: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          clickSubCategory(
+                                              index,
+                                              subCategoryController
+                                                  .subCategoryList[index].id);
+                                        },
+                                        child: Card(
+                                          color:
+                                              selectedSubCategoryIndex == index
+                                                  ? Colors.green[800]
+                                                  : Colors.white,
+                                          child: Center(
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5)),
+                                                padding: EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 8,
+                                                    left: 20,
+                                                    right: 20),
+                                                margin: EdgeInsets.all(2),
+                                                height: 40,
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                        subCategoryController
+                                                            .subCategoryList[
+                                                                index]
+                                                            .name
+                                                            .toString()
+                                                            .toUpperCase(),
+                                                        style: TextStyle(
+                                                            color:
+                                                                selectedSubCategoryIndex ==
+                                                                        index
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                            fontWeight:
+                                                                selectedSubCategoryIndex ==
+                                                                        index
+                                                                    ? FontWeight
+                                                                        .w900
+                                                                    : FontWeight
+                                                                        .bold)),
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: subCategoryController
+                                        .subCategoryList.length,
+                                  );
+                                }
+                              })),
+                        ],
+                      ),
+                    )
                   : Container(),
               Divider(
                 height: 5,
               ),
               k.length > 0
                   ? Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
-                  child: k.length > 0
-                      ? ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Divider(
-                          height: 1,
-                          //color: Colors.blueGrey,
-                        );
-                      },
-                      itemCount: k.length,
-                      controller: scrollController,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        String image_url =
-                        k[index]['images'][0]['image_url'];
+                      height: MediaQuery.of(context).size.height,
+                      child: k.length > 0
+                          ? ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  height: 1,
+                                  //color: Colors.blueGrey,
+                                );
+                              },
+                              itemCount: k.length,
+                              controller: scrollController,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                String image_url =
+                                    k[index]['images'][0]['image_url'];
 
-                        return Container(
-                          padding: EdgeInsets.only(
-                              left: 5, bottom: 5, top: 5),
-                          child: Row(
-                            children: [
-                              Container(
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width *
-                                    0.28,
-                                height: 90,
-                                child: image_url != ""
-                                    ? ClipRRect(
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                    "https://sta.farawlah.sa/storage/$image_url",
-                                  ),
-                                )
-                                    : Container(
-                                  height: 30,
-                                  width: 30,
-                                  child:
-                                  CircularProgressIndicator(
-                                    strokeWidth: 1.5,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding:
-                                EdgeInsets.only(left: 5, bottom: 5),
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width *
-                                    0.6,
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Text(k[index]['name'],
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight:
-                                            FontWeight.bold)),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                        "${k[index]['price']['sale_price']}" +
-                                            " SAR",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.green[800],
-                                            fontWeight:
-                                            FontWeight.w900)),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              Container(
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width *
-                                    0.1,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Icon(
-                                      Icons.favorite_border,
-                                      size: 20,
-                                      color: Colors.red[900],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add_circle,
-                                          size: 27,
-                                          color: Colors.green[700],
+                                return Container(
+                                  padding: EdgeInsets.only(
+                                      left: 5, bottom: 5, top: 5),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.28,
+                                        height: 90,
+                                        child: image_url != ""
+                                            ? ClipRRect(
+                                                child: CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  imageUrl:
+                                                      "https://sta.farawlah.sa/storage/$image_url",
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1.5,
+                                                ),
+                                              ),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.only(left: 5, bottom: 5),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(k[index]['name'],
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                "${k[index]['price']['sale_price']}" +
+                                                    " SAR",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.green[800],
+                                                    fontWeight:
+                                                        FontWeight.w900)),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: 10,
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Icon(
+                                              Icons.favorite_border,
+                                              size: 20,
+                                              color: Colors.red[900],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add_circle,
+                                                  size: 27,
+                                                  color: Colors.green[700],
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      })
-                      : Text("No data"))
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              })
+                          : Text("No data"))
                   : SizedBox(),
             ],
           ),
           isLoading
               ? Positioned(
-            bottom: 10,
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-              child: Center(
-                child: Container(
-                    height: 30,
-                    width: 30,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.5,
-                    )),
-              ),
-            ),
-          )
+                  bottom: 10,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: Container(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                          )),
+                    ),
+                  ),
+                )
               : SizedBox()
         ],
       ),
