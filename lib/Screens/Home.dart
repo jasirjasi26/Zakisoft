@@ -339,13 +339,8 @@ class _HomePageState extends State<HomePage> {
                   ? Container(
                       height: MediaQuery.of(context).size.height,
                       child: k.length > 0
-                          ? ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return Divider(
-                                  height: 1,
-                                  //color: Colors.blueGrey,
-                                );
-                              },
+                          ? ListView.builder(
+
                               itemCount: k.length,
                               controller: scrollController,
                               physics: AlwaysScrollableScrollPhysics(),
@@ -354,103 +349,104 @@ class _HomePageState extends State<HomePage> {
                                 String image_url =
                                     k[index]['images'][0]['image_url'];
 
-                                return Container(
+                                return Card(
+                                  margin: EdgeInsets.only(bottom: 0.8),
                                   color: Colors.white,
-                                  padding: EdgeInsets.only(
-                                      left: 5, bottom: 5, top: 5),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.28,
-                                        height: 90,
-                                        child: image_url != ""
-                                            ? ClipRRect(
-                                                child: CachedNetworkImage(
-                                                  fit: BoxFit.cover,
-                                                  imageUrl:
-                                                      "https://sta.farawlah.sa/storage/$image_url",
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.28,
+                                          height: 90,
+                                          child: image_url != ""
+                                              ? ClipRRect(
+                                                  child: CachedNetworkImage(
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        "https://sta.farawlah.sa/storage/$image_url",
+                                                  ),
+                                                )
+                                              : Container(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 1.5,
+                                                  ),
                                                 ),
-                                              )
-                                            : Container(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 1.5,
-                                                ),
+                                        ),
+                                        Container(
+                                          padding:
+                                              EdgeInsets.only(left: 5, bottom: 5),
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.6,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(k[index]['name'],
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              SizedBox(
+                                                height: 10,
                                               ),
-                                      ),
-                                      Container(
-                                        padding:
-                                            EdgeInsets.only(left: 5, bottom: 5),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(k[index]['name'],
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                                "${k[index]['price']['sale_price']}" +
-                                                    " SAR",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.green[800],
-                                                    fontWeight:
-                                                        FontWeight.w900)),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
+                                              Text(
+                                                  "${k[index]['price']['sale_price']}" +
+                                                      " SAR",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.green[800],
+                                                      fontWeight:
+                                                          FontWeight.w900)),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Spacer(),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Icon(
-                                              Icons.favorite_border,
-                                              size: 20,
-                                              color: Colors.red[900],
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.add_circle,
-                                                  size: 27,
-                                                  color: Colors.green[700],
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                        Spacer(),
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.1,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Icon(
+                                                Icons.favorite_border,
+                                                size: 20,
+                                                color: Colors.red[900],
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.add_circle,
+                                                    size: 27,
+                                                    color: Colors.green[700],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 );
                               })
