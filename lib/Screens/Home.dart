@@ -65,12 +65,13 @@ class _HomePageState extends State<HomePage> {
     k.clear();
     offset = 0;
     selectCategory.offset = offset;
-    selectCategory.selectedSubCategory = id;
+    selectCategory.selectedSubCategory = 0;
     setState(() {
       selectedCategoryIndex = index;
       selectedSubCategoryIndex = null;
     });
     subCategoryController.fetchSubCategory();
+    getList();
   }
 
   clickSubCategory(int index, int id) {
@@ -173,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                           bottom: 8,
                                           left: 20,
                                           right: 20),
-                                      margin: EdgeInsets.only(right: 2),
+                                      //margin: EdgeInsets.only(right: 2),
                                       height: 40,
                                       child: Center(
                                         child: Text(
@@ -227,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(5)),
                                 padding: EdgeInsets.only(
                                     top: 8, bottom: 8, left: 20, right: 20),
-                                margin: EdgeInsets.only(right: 2),
+                                //margin: EdgeInsets.only(right: 2),
                                 height: 45,
                                 child: Center(
                                   child: Text("All",
@@ -245,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                           ///Getx SubCategories
                           Container(
                               width: MediaQuery.of(context).size.width - 110,
-                              height: 45,
+                              height: 40,
                               child: Obx(() {
                                 if (subCategoryController.isLoading.value) {
                                   return Row(
@@ -290,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                                     bottom: 8,
                                                     left: 20,
                                                     right: 20),
-                                                margin: EdgeInsets.all(2),
+                                                //margin: EdgeInsets.all(2),
                                                 height: 40,
                                                 child: Row(
                                                   children: [
@@ -354,6 +355,7 @@ class _HomePageState extends State<HomePage> {
                                     k[index]['images'][0]['image_url'];
 
                                 return Container(
+                                  color: Colors.white,
                                   padding: EdgeInsets.only(
                                       left: 5, bottom: 5, top: 5),
                                   child: Row(
