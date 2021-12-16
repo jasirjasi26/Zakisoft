@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 class SubCategoryController extends GetxController{
   // ignore: deprecated_member_use
   var subCategoryList = List<AllSubCategories>().obs;
+  var isLoading =true.obs;
 
   @override
   void onInit() {
@@ -15,9 +16,15 @@ class SubCategoryController extends GetxController{
   }
 
   Future<void> fetchSubCategory() async {
-    var subcategory=await ApiService.getSubCategories();
-    if(subcategory!=null){
-      subCategoryList.value=subcategory;
+    isLoading(true);
+    try {
+      var subcategory=await ApiService.getSubCategories();
+      if(subcategory!=null){
+        subCategoryList.value=subcategory;
+      }
+    } finally{
+      isLoading(false);
     }
+
   }
 }
