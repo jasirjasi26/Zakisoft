@@ -105,14 +105,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         leading: Icon(
-          Icons.view_headline_rounded,
-          size: 35,
+          Icons.sort_sharp,
+          size: 40,
           color: Colors.red[900],
         ),
         actions: [
           Icon(
             Icons.search,
-            size: 35,
+            size: 40,
             color: Colors.red[900],
           ),
           SizedBox(
