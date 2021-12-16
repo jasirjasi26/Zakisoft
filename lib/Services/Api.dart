@@ -30,7 +30,7 @@ class ApiService {
 
   static Future<List<dynamic>> getAll() async {
     final response = await client.get(Uri.parse(
-        'https://sta.farawlah.sa/api/mobile/products?category_id=${selectCategory.selectedSubCategory}&limit=20&store_id=2'));
+        'https://sta.farawlah.sa/api/mobile/products?category_id=${selectCategory.selectedSubCategory}&limit=20&store_id=2&offset=${selectCategory.offset}'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

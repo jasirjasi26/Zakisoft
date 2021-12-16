@@ -35,10 +35,12 @@ class _HomePageState extends State<HomePage> {
         if (scrollController.position.pixels == 0) {
           print('ListView scroll at top');
         } else {
-          getList();
           setState(() {
             offset = offset + 1;
           });
+
+          selectCategory.offset = offset;
+          getList();
 
           // Load next documents
         }
@@ -57,24 +59,24 @@ class _HomePageState extends State<HomePage> {
         isLoading = false;
       });
     });
-    print(selectCategory.selectedSubCategory);
   }
 
   clickCategory(int index, int id) {
     k.clear();
     offset = 0;
+    selectCategory.offset = offset;
     selectCategory.selectedSubCategory = id;
     setState(() {
       selectedCategoryIndex = index;
       selectedSubCategoryIndex = null;
     });
     subCategoryController.fetchSubCategory();
-    getList();
   }
 
   clickSubCategory(int index, int id) {
     k.clear();
     offset = 0;
+    selectCategory.offset = offset;
     selectCategory.selectedSubCategory = id;
     setState(() {
       selectedSubCategoryIndex = index;
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                           ))),
                 ],
               ),
-              selectCategory.selectedSubCategory != 0
+              selectedCategoryIndex != -1
                   ? Container(
                       height: 40,
                       child: Row(
@@ -212,19 +214,30 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Card(
-                            color: Colors.white,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.only(
-                                  top: 8, bottom: 8, left: 20, right: 20),
-                              margin: EdgeInsets.only(right: 2),
-                              height: 45,
-                              child: Center(
-                                child: Text("All",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold)),
+                            color:
+                            selectedSubCategoryIndex == null
+                                ? Colors.green[800]
+                                : Colors.white,
+                            child: GestureDetector(
+                              onTap: () {
+                                clickSubCategory(null, 0);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5)),
+                                padding: EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 20, right: 20),
+                                margin: EdgeInsets.only(right: 2),
+                                height: 45,
+                                child: Center(
+                                  child: Text("All",
+                                      style: TextStyle(
+                                          color:
+                                          selectedSubCategoryIndex == null
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.bold)),
+                                ),
                               ),
                             ),
                           ),
